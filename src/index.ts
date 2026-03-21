@@ -2,7 +2,7 @@ import {
     IObjectManager, 
     IGameObject,
     Transform,
-    Mesh
+//    Mesh
 } from '@mekou/engine-api';
 
 export const initGame = (objectManager: IObjectManager) => {
@@ -95,6 +95,7 @@ export class FruitCatchGame {
                 console.log(transform.position);
             }
 
+            /*
             const mesh = fruit.getComponent(Mesh);
             if (mesh) {
                 mesh.setBoxGeometry(0.5, 0.5, 0.5);
@@ -102,6 +103,7 @@ export class FruitCatchGame {
             } else {
                 fruit.addComponent(Mesh);
             }
+            */
             
             // ... 
             this.fruits.push(fruit);
