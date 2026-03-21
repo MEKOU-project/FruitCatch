@@ -1,8 +1,8 @@
 import { 
     IObjectManager, 
     IGameObject,
-    GrabbableComponent,
-    Transform
+    Transform,
+    Mesh
 } from '@mekou/engine-api';
 
 export const initGame = (objectManager: IObjectManager) => {
@@ -43,17 +43,34 @@ export class FruitCatchGame {
      */
     public update = (dt: number): void => {
         try {
-            // ここで落ちているなら this.spawnTimer か this.spawnFruit が怪しい
+            // 生成処理
             this.spawnTimer += dt;
             if (this.spawnTimer >= this.SPAWN_INTERVAL) {
                 this.spawnFruit();
                 this.spawnTimer = 0;
             }
-            // ... 以下略
+
+            // 落下処理 ＆ 消す処理
+            for (let i = this.fruits.length - 1; i >= 0; i--) {
+                const fruit = this.fruits[i];
+                const transform = fruit.getComponent(Transform);
+
+                if (transform) {
+                    // 1. 座標の更新 (簡易重力)
+                    const pos = transform.position;
+                    const nextY = pos.y + (this.GRAVITY * dt);
+                    transform.setPosition(pos.x, nextY, pos.z);
+
+                    // 2. 地面判定による削除
+                    if (nextY <= this.GROUND_Y) {
+                        console.log(`♻️ [GC] Removing fruit at ground: ${fruit}`);
+                        this.removeFruit(fruit, i);
+                    }
+                }
+            }
         } catch (e) {
             console.error("🚨 [Update Loop] CRASH:", e);
             console.error("Current this:", this);
-            // 連続でログが出過ぎるのを防ぐため、一度エラーが出たら止めるフラグを立ててもいい
         }
     }
 
@@ -68,7 +85,23 @@ export class FruitCatchGame {
         try {
             const id = `fruit_${Date.now()}`;
             const fruit = this.objectManager.createGameObject(id);
+
             console.log("✅ [spawnFruit] Success! Fruit ID:", id);
+
+            const transform = fruit.getComponent(Transform);
+            if (transform) {
+                const startX = (Math.random() - 0.5) * 10; // -5 ～ 5 の範囲
+                transform.setPosition(startX, 10, 0);
+                console.log(transform.position);
+            }
+
+            const mesh = fruit.getComponent(Mesh);
+            if (mesh) {
+                mesh.setBoxGeometry(0.5, 0.5, 0.5);
+                console.log("📦 Mesh initialized for:", id);
+            } else {
+                fruit.addComponent(Mesh);
+            }
             
             // ... 
             this.fruits.push(fruit);
