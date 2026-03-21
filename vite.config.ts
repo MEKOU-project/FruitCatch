@@ -10,7 +10,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['three', '@mekou/engine-api'], // エンジン側が持っているものは含めない
+      external: ['three'], // エンジン側が持っているものは含めない
     }
   }
 });
