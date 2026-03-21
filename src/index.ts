@@ -1,7 +1,7 @@
 import { 
     IObjectManager, 
     IGameObject,
-    Transform,
+    //Transform,
 //    Mesh
 } from '@mekou/engine-api';
 
@@ -53,7 +53,8 @@ export class FruitCatchGame {
             // 落下処理 ＆ 消す処理
             for (let i = this.fruits.length - 1; i >= 0; i--) {
                 const fruit = this.fruits[i];
-                const transform = fruit.getComponent(Transform);
+                
+                const transform = fruit.getComponent("Transform");
 
                 if (transform) {
                     // 1. 座標の更新 (簡易重力)
@@ -88,22 +89,20 @@ export class FruitCatchGame {
 
             console.log("✅ [spawnFruit] Success! Fruit ID:", id);
 
-            const transform = fruit.getComponent(Transform);
+            const transform = fruit.getComponent("Transform");
             if (transform) {
                 const startX = (Math.random() - 0.5) * 10; // -5 ～ 5 の範囲
                 transform.setPosition(startX, 10, 0);
                 console.log(transform.position);
             }
 
-            /*
-            const mesh = fruit.getComponent(Mesh);
+            const mesh = fruit.getComponent("Mesh");
             if (mesh) {
                 mesh.setBoxGeometry(0.5, 0.5, 0.5);
                 console.log("📦 Mesh initialized for:", id);
             } else {
-                fruit.addComponent(Mesh);
+                fruit.addComponent("Mesh");
             }
-            */
             
             // ... 
             this.fruits.push(fruit);
