@@ -6,7 +6,7 @@ import {
 } from '@mekou/engine-api';
 
 export const initGame = (objectManager: IObjectManager) => {
-    console.log("🚀 [initGame] START");
+    console.log("🚀 [initGame] START v0.1.1");
     console.log("📦 Received objectManager:", objectManager);
     
     try {
@@ -94,6 +94,8 @@ export class FruitCatchGame {
                 const startX = (Math.random() - 0.5) * 10; // -5 ～ 5 の範囲
                 transform.setPosition(startX, 10, 0);
                 console.log("objectPos:", JSON.stringify(transform.position));
+            }else {
+                fruit.addComponent<Transform>("Transform");
             }
 
             const mesh = fruit.getComponent<Mesh>("Mesh");
@@ -101,7 +103,7 @@ export class FruitCatchGame {
                 mesh.setBoxGeometry(0.5, 0.5, 0.5);
                 console.log("📦 Mesh initialized for:", id);
             } else {
-                console.log("Mesh is not found:", id)
+                fruit.addComponent<Mesh>("Mesh");
             }
             
             // ... 
