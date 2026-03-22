@@ -93,7 +93,7 @@ export class FruitCatchGame {
             if (transform) {
                 const startX = (Math.random() - 0.5) * 10; // -5 ～ 5 の範囲
                 transform.setPosition(startX, 10, 0);
-                console.log("objectPos:" + transform.position);
+                console.log("objectPos:", JSON.stringify(transform.position));
             }
 
             const mesh = fruit.getComponent<Mesh>("Mesh");
@@ -101,7 +101,7 @@ export class FruitCatchGame {
                 mesh.setBoxGeometry(0.5, 0.5, 0.5);
                 console.log("📦 Mesh initialized for:", id);
             } else {
-                fruit.addComponent("Mesh");
+                console.log("Mesh is not found:", id)
             }
             
             // ... 
