@@ -46,7 +46,7 @@ var e = (e) => {
 				n.setPosition(e, 10, 0), console.log("objectPos:", JSON.stringify(n.position));
 			} else t.addComponent("Transform");
 			let r = t.getComponent("Mesh");
-			r ? (r.setBoxGeometry(.5, .5, .5), console.log("📦 Mesh initialized for:", e)) : t.addComponent("Mesh"), this.fruits.push(t);
+			r ? (r.setBoxGeometry(.5, .5, .5), console.log("📦 Mesh initialized for:", e)) : (t.addComponent("Mesh"), console.log("Mesh added!")), this.fruits.push(t);
 		} catch (e) {
 			console.error("❌ [spawnFruit] FAILED to create or push fruit:", e);
 		}

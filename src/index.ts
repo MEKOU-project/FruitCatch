@@ -104,6 +104,7 @@ export class FruitCatchGame {
                 console.log("📦 Mesh initialized for:", id);
             } else {
                 fruit.addComponent<Mesh>("Mesh");
+                console.log("Mesh added!");
             }
             
             // ... 
