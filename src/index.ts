@@ -42,6 +42,7 @@ export class FruitCatchGame {
      * @param dt 前フレームからの経過時間 (秒)
      */
     public update = (dt: number): void => {
+
         try {
             // 生成処理
             this.spawnTimer += dt;
@@ -89,25 +90,36 @@ export class FruitCatchGame {
 
             console.log("✅ [spawnFruit] Success! Fruit ID:", id);
 
-            const transform = fruit.getComponent<Transform>("Transform");
-            if (transform) {
-                const startX = (Math.random() - 0.5) * 10; // -5 ～ 5 の範囲
-                transform.setPosition(startX, 10, 0);
-                console.log("objectPos:", JSON.stringify(transform.position));
-            }else {
-                fruit.addComponent<Transform>("Transform");
-            }
-
-            const mesh = fruit.getComponent<Mesh>("Mesh");
-            if (mesh) {
-                mesh.setBoxGeometry(0.5, 0.5, 0.5);
-                console.log("📦 Mesh initialized for:", id);
-            } else {
-                fruit.addComponent<Mesh>("Mesh");
-                console.log("Mesh added!");
+            // Transformの処理
+            let transform = fruit.getComponent<Transform>("Transform");
+            if (!transform) {
+                transform = fruit.addComponent<Transform>("Transform");
             }
             
-            // ... 
+            const startX = (Math.random() - 0.5) * 10;
+            transform.setPosition(startX, 10, 0);
+
+            // Meshの処理 (const ではなく let を使用)
+            let mesh = fruit.getComponent<Mesh>("Mesh");
+            if (!mesh) {
+                mesh = fruit.addComponent<Mesh>("Mesh");
+                console.log("📦 Mesh added for:", id);
+            }
+
+            
+            const scriptUrl = import.meta.url;
+            const baseUrl = scriptUrl.substring(0, scriptUrl.lastIndexOf('/'));
+
+            // モデルの設定
+            const random = Math.floor(Math.random() * 3);
+            if (random === 1) {
+                mesh.setModel(`${baseUrl}/grapes.glb`);
+            } else if (random === 2) {
+                mesh.setModel(`${baseUrl}/apple.glb`);
+            } else {
+                mesh.setBoxGeometry(0.5, 0.5, 0.5);
+            }
+            
             this.fruits.push(fruit);
         } catch (e) {
             console.error("❌ [spawnFruit] FAILED to create or push fruit:", e);
