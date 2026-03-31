@@ -32,24 +32,14 @@ var e = (e) => {
 			console.error("🚨 [Update Loop] CRASH:", e), console.error("Current this:", this);
 		}
 	};
-	spawnFruit = () => {
-		if (console.log("🍉 [spawnFruit] Attempting to create fruit..."), !this.objectManager) {
-			console.error("💀 [spawnFruit] this.objectManager is NULL or UNDEFINED!");
-			return;
-		}
-		try {
-			let e = `fruit_${Date.now()}`, t = this.objectManager.createGameObject(e);
-			console.log("✅ [spawnFruit] Success! Fruit ID:", e);
-			let n = t.getComponent("Transform");
-			n ||= t.addComponent("Transform");
-			let r = (Math.random() - .5) * 10;
+	spawnFruit = async () => {
+		if (console.log("🍉 [spawnFruit] Attempting to create fruit..."), this.objectManager) try {
+			let e = `fruit_${Date.now()}`, t = this.objectManager.createGameObject(e), n = t.getComponent("Transform") || t.addComponent("Transform"), r = (Math.random() - .5) * 10;
 			n.setPosition(r, 10, 0);
-			let i = t.getComponent("Mesh");
-			i || (i = t.addComponent("Mesh"), console.log("📦 Mesh added for:", e));
-			let a = import.meta.url, o = a.substring(0, a.lastIndexOf("/")), s = Math.floor(Math.random() * 3);
-			s === 1 ? i.setModel(`${o}/grapes.glb`) : s === 2 ? i.setModel(`${o}/apple.glb`) : i.setBoxGeometry(.5, .5, .5), this.fruits.push(t);
+			let i = t.getComponent("Mesh") || t.addComponent("Mesh"), a = import.meta.url, o = a.substring(0, a.lastIndexOf("/")), s = "", c = Math.floor(Math.random() * 3);
+			c === 1 ? s = `${o}/grapes.glb` : c === 2 && (s = `${o}/apple.glb`), s ? (i.setModel(s), console.log("💎 Assigned Model URL to Core:", s)) : i.setBoxGeometry(.5, .5, .5), this.fruits.push(t);
 		} catch (e) {
-			console.error("❌ [spawnFruit] FAILED to create or push fruit:", e);
+			console.error("❌ [spawnFruit] FAILED:", e);
 		}
 	};
 	removeFruit(e, t) {

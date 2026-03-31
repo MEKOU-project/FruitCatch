@@ -76,53 +76,47 @@ export class FruitCatchGame {
         }
     }
 
-    private spawnFruit = (): void => {
+    private spawnFruit = async (): Promise<void> => { // async を追加
         console.log("🍉 [spawnFruit] Attempting to create fruit...");
         
-        if (!this.objectManager) {
-            console.error("💀 [spawnFruit] this.objectManager is NULL or UNDEFINED!");
-            return;
-        }
+        if (!this.objectManager) return;
 
         try {
             const id = `fruit_${Date.now()}`;
             const fruit = this.objectManager.createGameObject(id);
 
-            console.log("✅ [spawnFruit] Success! Fruit ID:", id);
-
-            // Transformの処理
-            let transform = fruit.getComponent<Transform>("Transform");
-            if (!transform) {
-                transform = fruit.addComponent<Transform>("Transform");
-            }
-            
+            // Transform
+            let transform = fruit.getComponent<Transform>("Transform") || fruit.addComponent<Transform>("Transform");
             const startX = (Math.random() - 0.5) * 10;
             transform.setPosition(startX, 10, 0);
 
-            // Meshの処理 (const ではなく let を使用)
-            let mesh = fruit.getComponent<Mesh>("Mesh");
-            if (!mesh) {
-                mesh = fruit.addComponent<Mesh>("Mesh");
-                console.log("📦 Mesh added for:", id);
-            }
+            // Mesh
+            let mesh = fruit.getComponent<Mesh>("Mesh") || fruit.addComponent<Mesh>("Mesh");
 
-            
             const scriptUrl = import.meta.url;
             const baseUrl = scriptUrl.substring(0, scriptUrl.lastIndexOf('/'));
 
-            // モデルの設定
+            let modelPath = "";
             const random = Math.floor(Math.random() * 3);
-            if (random === 1) {
-                mesh.setModel(`${baseUrl}/grapes.glb`);
-            } else if (random === 2) {
-                mesh.setModel(`${baseUrl}/apple.glb`);
+
+            if (random === 1) modelPath = `${baseUrl}/grapes.glb`;
+            else if (random === 2) modelPath = `${baseUrl}/apple.glb`;
+
+            if (modelPath) {
+                // オプションA: CoreのAssetLoaderを信じてURLを丸投げする (推奨)
+                mesh.setModel(modelPath); 
+                console.log("💎 Assigned Model URL to Core:", modelPath);
+                
+                /* もしどうしても手動でBlob化したい場合はここだけで止める。
+                   下の古い if(random === 1) ... ブロックは絶対に削除すること。
+                */
             } else {
                 mesh.setBoxGeometry(0.5, 0.5, 0.5);
             }
             
             this.fruits.push(fruit);
         } catch (e) {
-            console.error("❌ [spawnFruit] FAILED to create or push fruit:", e);
+            console.error("❌ [spawnFruit] FAILED:", e);
         }
     }
 
